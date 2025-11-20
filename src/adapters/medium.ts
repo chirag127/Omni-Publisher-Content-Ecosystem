@@ -45,11 +45,21 @@ export class MediumAdapter implements Adapter {
                 postId: response.data.data.id,
             };
         } catch (error: any) {
+            // Enhanced error logging for debugging
+            if (error.response) {
+                logger.error(
+                    `Medium publish error: ${JSON.stringify(
+                        error.response.data
+                    )}`
+                );
+            }
             return {
                 platform: this.name,
                 success: false,
                 error:
-                    error.response?.data?.errors?.[0]?.message || error.message,
+                    error.response?.data?.errors?.[0]?.message ||
+                    JSON.stringify(error.response?.data) ||
+                    error.message,
             };
         }
     }

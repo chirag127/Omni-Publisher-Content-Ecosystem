@@ -7,8 +7,14 @@ export class WixAdapter implements Adapter {
     enabled = true;
 
     async validate(): Promise<boolean> {
-        if (!process.env.WIX_API_KEY || !process.env.WIX_SITE_ID) {
-            logger.warn("WIX_API_KEY or WIX_SITE_ID is missing");
+        if (
+            !process.env.WIX_API_KEY ||
+            !process.env.WIX_SITE_ID ||
+            !process.env.WIX_MEMBER_ID
+        ) {
+            logger.warn(
+                "WIX_API_KEY, WIX_SITE_ID, or WIX_MEMBER_ID is missing"
+            );
             return false;
         }
         return true;
@@ -21,6 +27,7 @@ export class WixAdapter implements Adapter {
                 {
                     draftPost: {
                         title: post.title,
+                        memberId: process.env.WIX_MEMBER_ID,
                         richContent: {
                             nodes: [
                                 {

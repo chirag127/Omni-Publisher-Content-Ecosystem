@@ -35,7 +35,10 @@ export class HashnodeAdapter implements Adapter {
                 contentMarkdown: post.content,
                 tags: post.tags?.map((tag) => ({
                     name: tag,
-                    slug: tag.toLowerCase(),
+                    slug: tag
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, "-") // Replace spaces and special chars with hyphens
+                        .replace(/^-+|-+$/g, ""), // Remove leading/trailing hyphens
                 })),
                 publicationId: process.env.HASHNODE_PUBLICATION_ID,
             },
