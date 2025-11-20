@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+// Load environment variables BEFORE any other imports that might use them
+dotenv.config();
+
 import fs from "fs/promises";
 import path from "path";
 import { Post, Adapter, PublishResult } from "./types.js";

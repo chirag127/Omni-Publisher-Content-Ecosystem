@@ -12,6 +12,7 @@
     "start": "tsx src/publish.ts",
     "seed": "tsx src/seed-content.ts",
     "deploy": "tsx src/build-site.ts",
+    "verify-env": "tsx src/verify-env.ts",
     "lint": "biome check src",
     "format": "biome format --write src",
     "test": "echo \"Error: no test specified\" && exit 1"
