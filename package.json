@@ -1,0 +1,50 @@
+{
+  "name": "omni-publisher-ecosystem",
+  "version": "1.0.0",
+  "description": "A production-ready content ecosystem for publishing to 17 platforms.",
+  "main": "dist/publish.js",
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/publish.ts",
+    "seed": "tsx src/seed-content.ts",
+    "deploy": "tsx src/build-site.ts",
+    "lint": "biome check src",
+    "format": "biome format --write src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "publisher",
+    "content",
+    "ecosystem",
+    "typescript",
+    "automation"
+  ],
+  "author": "Omni-Bot",
+  "license": "MIT",
+  "dependencies": {
+    "@hubspot/api-client": "^11.0.0",
+    "@notionhq/client": "^2.2.15",
+    "@tryghost/admin-api": "^1.13.8",
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "googleapis": "^144.0.0",
+    "gray-matter": "^4.0.3",
+    "marked": "^14.1.1",
+    "oauth-1.0a": "^2.2.6",
+    "simple-oauth2": "^5.0.0",
+    "winston": "^3.14.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.2",
+    "@types/node": "^22.5.5",
+    "@types/oauth": "^0.9.4",
+    "@types/simple-oauth2": "^5.0.7",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
+  }
+}
