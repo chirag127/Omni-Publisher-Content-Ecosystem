@@ -1,20 +1,20 @@
-import fs from "fs/promises";
 import path from "path";
-import { parseMarkdown, markdownToHtml } from "./utils/markdown.js";
+import fs from "fs/promises";
 import { logger } from "./utils/logger.js";
+import { markdownToHtml, parseMarkdown } from "./utils/markdown.js";
 
 const POSTS_DIR = path.join(process.cwd(), "content", "posts");
 const PUBLIC_DIR = path.join(process.cwd(), "public");
 const ASSETS_DIR = path.join(PUBLIC_DIR, "assets");
 
 async function buildSite() {
-    logger.info("Building static site...");
+  logger.info("Building static site...");
 
-    await fs.mkdir(PUBLIC_DIR, { recursive: true });
-    await fs.mkdir(ASSETS_DIR, { recursive: true });
+  await fs.mkdir(PUBLIC_DIR, { recursive: true });
+  await fs.mkdir(ASSETS_DIR, { recursive: true });
 
-    // Create styles.css
-    const cssContent = `
+  // Create styles.css
+  const cssContent = `
     body { font-family: system-ui, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 2rem; color: #333; }
     header { margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; }
     h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
@@ -25,24 +25,21 @@ async function buildSite() {
     pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; }
     img { max-width: 100%; height: auto; }
   `;
-    await fs.writeFile(path.join(ASSETS_DIR, "styles.css"), cssContent);
+  await fs.writeFile(path.join(ASSETS_DIR, "styles.css"), cssContent);
 
-    const files = await fs.readdir(POSTS_DIR);
-    const posts = [];
+  const files = await fs.readdir(POSTS_DIR);
+  const posts = [];
 
-    for (const file of files) {
-        if (file.endsWith(".md")) {
-            const content = await fs.readFile(
-                path.join(POSTS_DIR, file),
-                "utf-8"
-            );
-            const post = parseMarkdown(content);
-            if (!post.slug) post.slug = file.replace(".md", "");
+  for (const file of files) {
+    if (file.endsWith(".md")) {
+      const content = await fs.readFile(path.join(POSTS_DIR, file), "utf-8");
+      const post = parseMarkdown(content);
+      if (!post.slug) post.slug = file.replace(".md", "");
 
-            const htmlContent = markdownToHtml(post.content);
+      const htmlContent = markdownToHtml(post.content);
 
-            // Create individual post page
-            const postHtml = `
+      // Create individual post page
+      const postHtml = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,16 +71,13 @@ async function buildSite() {
 </html>
       `;
 
-            await fs.writeFile(
-                path.join(PUBLIC_DIR, `${post.slug}.html`),
-                postHtml
-            );
-            posts.push(post);
-        }
+      await fs.writeFile(path.join(PUBLIC_DIR, `${post.slug}.html`), postHtml);
+      posts.push(post);
     }
+  }
 
-    // Create index.html
-    const indexHtml = `
+  // Create index.html
+  const indexHtml = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,8 +94,8 @@ async function buildSite() {
   </header>
   <main>
     ${posts
-        .map(
-            (post) => `
+      .map(
+        (post) => `
       <article>
         <h2><a href="/${post.slug}.html">${post.title}</a></h2>
         <p>${post.description || ""}</p>
@@ -109,9 +103,9 @@ async function buildSite() {
           ${post.tags ? `Tags: ${post.tags.join(", ")}` : ""}
         </div>
       </article>
-    `
-        )
-        .join("")}
+    `,
+      )
+      .join("")}
   </main>
   <footer>
     <p>Powered by Omni-Publisher</p>
@@ -120,12 +114,12 @@ async function buildSite() {
 </html>
   `;
 
-    await fs.writeFile(path.join(PUBLIC_DIR, "index.html"), indexHtml);
+  await fs.writeFile(path.join(PUBLIC_DIR, "index.html"), indexHtml);
 
-    logger.info(`Site built successfully with ${posts.length} posts.`);
+  logger.info(`Site built successfully with ${posts.length} posts.`);
 }
 
 buildSite().catch((error) => {
-    logger.error("Error building site", { error });
-    process.exit(1);
+  logger.error("Error building site", { error });
+  process.exit(1);
 });

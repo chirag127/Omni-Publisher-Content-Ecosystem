@@ -26,18 +26,22 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
+            - name: Build Project
+              run: pnpm build
+
             - name: Publish Posts
               run: pnpm start
               env:
                   DEV_TO_API_KEY: ${{ secrets.DEV_TO_API_KEY }}
                   HASHNODE_TOKEN: ${{ secrets.HASHNODE_TOKEN }}
                   HASHNODE_PUBLICATION_ID: ${{ secrets.HASHNODE_PUBLICATION_ID }}
-                  MEDIUM_INTEGRATION_TOKEN: ${{ secrets.MEDIUM_INTEGRATION_TOKEN }}
+                  MEDIUM_TOKEN: ${{ secrets.MEDIUM_TOKEN }}
                   MEDIUM_USER_ID: ${{ secrets.MEDIUM_USER_ID }}
                   WORDPRESS_TOKEN: ${{ secrets.WORDPRESS_TOKEN }}
                   WORDPRESS_SITE_ID: ${{ secrets.WORDPRESS_SITE_ID }}
-                  BLOGGER_CLIENT_EMAIL: ${{ secrets.BLOGGER_CLIENT_EMAIL }}
-                  BLOGGER_PRIVATE_KEY: ${{ secrets.BLOGGER_PRIVATE_KEY }}
+                  BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
+                  BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
+                  BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
                   BLOGGER_BLOG_ID: ${{ secrets.BLOGGER_BLOG_ID }}
                   TUMBLR_CONSUMER_KEY: ${{ secrets.TUMBLR_CONSUMER_KEY }}
                   TUMBLR_CONSUMER_SECRET: ${{ secrets.TUMBLR_CONSUMER_SECRET }}
@@ -46,6 +50,7 @@ jobs:
                   TUMBLR_BLOG_IDENTIFIER: ${{ secrets.TUMBLR_BLOG_IDENTIFIER }}
                   WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
                   WIX_SITE_ID: ${{ secrets.WIX_SITE_ID }}
+                  WIX_MEMBER_ID: ${{ secrets.WIX_MEMBER_ID }}
                   TELEGRAPH_ACCESS_TOKEN: ${{ secrets.TELEGRAPH_ACCESS_TOKEN }}
                   MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
                   MASTODON_INSTANCE_URL: ${{ secrets.MASTODON_INSTANCE_URL }}
