@@ -47,6 +47,39 @@ export class BlueskyAdapter implements Adapter {
             const { message } = formatSocialPost(post, 300); // Bluesky has 300 char limit
             const accessJwt = await this.getSession();
 
+            // Correctly calculate byte indices for facets
+            const encoder = new TextEncoder();
+
+            const urlBytes = encoder.encode(post.publishedUrl);
+
+            // Find the byte position of the URL in the message
+            // Note: This assumes the URL appears exactly once and matches byte-wise
+            // A more robust way is to construct the message with known parts
+
+            const urlIndex = message.indexOf(post.publishedUrl);
+
+            let facets = [];
+
+            if (urlIndex >= 0) {
+                // Calculate byte offset
+                const prefix = message.substring(0, urlIndex);
+                const byteStart = encoder.encode(prefix).length;
+                const byteEnd = byteStart + urlBytes.length;
+
+                facets.push({
+                    index: {
+                        byteStart: byteStart,
+                        byteEnd: byteEnd,
+                    },
+                    features: [
+                        {
+                            $type: "app.bsky.richtext.facet#link",
+                            uri: post.publishedUrl,
+                        },
+                    ],
+                });
+            }
+
             const response = await axios.post(
                 "https://bsky.social/xrpc/com.atproto.repo.createRecord",
                 {
@@ -56,24 +89,7 @@ export class BlueskyAdapter implements Adapter {
                         text: message,
                         createdAt: new Date().toISOString(),
                         $type: "app.bsky.feed.post",
-                        facets: [
-                            {
-                                index: {
-                                    byteStart: message.indexOf(
-                                        post.publishedUrl
-                                    ),
-                                    byteEnd:
-                                        message.indexOf(post.publishedUrl) +
-                                        post.publishedUrl.length,
-                                },
-                                features: [
-                                    {
-                                        $type: "app.bsky.richtext.facet#link",
-                                        uri: post.publishedUrl,
-                                    },
-                                ],
-                            },
-                        ],
+                        facets: facets,
                     },
                 },
                 {

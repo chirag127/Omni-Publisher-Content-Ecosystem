@@ -1,6 +1,7 @@
 import axios from "axios";
 import crypto from "crypto";
 import { Adapter, Post, PublishResult } from "../types.js";
+import OAuth from "oauth-1.0a";
 import { logger } from "../utils/logger.js";
 import { formatSocialPost } from "../utils/message-template.js";
 
@@ -21,67 +22,6 @@ export class TwitterAdapter implements Adapter {
         return true;
     }
 
-    private generateOAuthHeader(
-        method: string,
-        url: string,
-        params: Record<string, string>
-    ): string {
-        const oauthParams: Record<string, string> = {
-            oauth_consumer_key: process.env.TWITTER_API_KEY!,
-            oauth_token: process.env.TWITTER_ACCESS_TOKEN!,
-            oauth_signature_method: "HMAC-SHA1",
-            oauth_timestamp: Math.floor(Date.now() / 1000).toString(),
-            oauth_nonce: crypto.randomBytes(16).toString("hex"),
-            oauth_version: "1.0",
-        };
-
-        // Combine oauth and request params
-        const allParams = { ...oauthParams, ...params };
-
-        // Create signature base string
-        const sortedParams = Object.keys(allParams)
-            .sort()
-            .map(
-                (key) =>
-                    `${encodeURIComponent(key)}=${encodeURIComponent(
-                        allParams[key]
-                    )}`
-            )
-            .join("&");
-
-        const signatureBase = `${method}&${encodeURIComponent(
-            url
-        )}&${encodeURIComponent(sortedParams)}`;
-
-        // Create signing key
-        const signingKey = `${encodeURIComponent(
-            process.env.TWITTER_API_SECRET!
-        )}&${encodeURIComponent(process.env.TWITTER_ACCESS_TOKEN_SECRET!)}`;
-
-        // Generate signature
-        const signature = crypto
-            .createHmac("sha1", signingKey)
-            .update(signatureBase)
-            .digest("base64");
-
-        oauthParams.oauth_signature = signature;
-
-        // Build OAuth header
-        const oauthHeader =
-            "OAuth " +
-            Object.keys(oauthParams)
-                .sort()
-                .map(
-                    (key) =>
-                        `${encodeURIComponent(key)}="${encodeURIComponent(
-                            oauthParams[key]
-                        )}"`
-                )
-                .join(", ");
-
-        return oauthHeader;
-    }
-
     async publish(post: Post): Promise<PublishResult> {
         try {
             if (!post.publishedUrl) {
@@ -97,17 +37,46 @@ export class TwitterAdapter implements Adapter {
 
             const { message } = formatSocialPost(post, 280); // Twitter has 280 char limit
 
-            const url = "https://api.twitter.com/2/tweets";
-            const authorization = this.generateOAuthHeader("POST", url, {});
+            // Use oauth-1.0a library for robust signature generation
+            const oauth = new OAuth({
+                consumer: {
+                    key: process.env.TWITTER_API_KEY!,
+                    secret: process.env.TWITTER_API_SECRET!,
+                },
+                signature_method: "HMAC-SHA1",
+                hash_function(base_string: string, key: string) {
+                    return crypto
+                        .createHmac("sha1", key)
+                        .update(base_string)
+                        .digest("base64");
+                },
+            });
+
+            const request_data = {
+                url: "https://api.twitter.com/2/tweets",
+                method: "POST",
+            };
+
+            // Note: Twitter API v2 POST body is NOT part of the OAuth 1.0a signature
+            // Only query params would be. Since we send JSON body, we sign only the URL/Method.
+
+            const token = {
+                key: process.env.TWITTER_ACCESS_TOKEN!,
+                secret: process.env.TWITTER_ACCESS_TOKEN_SECRET!,
+            };
+
+            const authHeader = oauth.toHeader(
+                oauth.authorize(request_data, token)
+            );
 
             const response = await axios.post(
-                url,
+                request_data.url,
                 {
                     text: message,
                 },
                 {
                     headers: {
-                        Authorization: authorization,
+                        ...authHeader,
                         "Content-Type": "application/json",
                     },
                 }

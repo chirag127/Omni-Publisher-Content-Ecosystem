@@ -26,18 +26,36 @@ export class TelegraphAdapter implements Adapter {
             // Convert Markdown to Telegraph Nodes
             const contentNodes = markdownToTelegraph(post.content);
 
-            const response = await axios.post(
-                "https://api.telegra.ph/createPage",
-                {
-                    access_token: process.env.TELEGRAPH_ACCESS_TOKEN,
-                    title: post.title,
-                    content: JSON.stringify(contentNodes),
-                    return_content: true,
+            // Retry logic for ECONNRESET
+            let retries = 3;
+            let response;
+            while (retries > 0) {
+                try {
+                    response = await axios.post(
+                        "https://api.telegra.ph/createPage",
+                        {
+                            access_token: process.env.TELEGRAPH_ACCESS_TOKEN,
+                            title: post.title,
+                            content: JSON.stringify(contentNodes),
+                            return_content: true,
+                        }
+                    );
+                    break; // Success
+                } catch (err: any) {
+                    retries--;
+                    if (retries === 0) throw err;
+                    logger.warn(
+                        `Telegraph publish failed, retrying... (${retries} attempts left)`,
+                        { error: err.message }
+                    );
+                    await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2s
                 }
-            );
+            }
 
-            if (!response.data.ok) {
-                throw new Error(response.data.error);
+            if (!response || !response.data.ok) {
+                throw new Error(
+                    response?.data?.error || "Unknown Telegraph error"
+                );
             }
 
             return {
