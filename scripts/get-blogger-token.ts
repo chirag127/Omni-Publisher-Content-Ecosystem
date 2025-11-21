@@ -1,3 +1,4 @@
+import "dotenv/config";
 import http from "http";
 import url from "url";
 import { google } from "googleapis";
@@ -18,14 +19,6 @@ async function main() {
     console.log(
         "You will need a Client ID and Client Secret from the Google Cloud Console.\n"
     );
-
-    // 1. Get Client ID and Secret from args or prompt (simplified to args/env for now, or just hardcoded prompt simulation)
-    // For simplicity in this environment, we'll ask the user to set them in .env temporarily or pass them.
-    // But to make it user friendly, let's just ask them to paste it if we could, but we can't easily do interactive input here without a library like 'prompts'.
-    // So we will assume they are in process.env OR we will ask the user to edit this script or provide them via env vars.
-
-    // Better approach: Check .env for BLOGGER_CLIENT_ID and BLOGGER_CLIENT_SECRET.
-    // If not found, tell user to set them.
 
     const clientId = process.env.BLOGGER_CLIENT_ID;
     const clientSecret = process.env.BLOGGER_CLIENT_SECRET;
