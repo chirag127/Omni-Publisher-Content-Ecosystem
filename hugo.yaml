@@ -1,0 +1,111 @@
+baseURL: https://chirag127.github.io/Omni-Publisher-Content-Ecosystem/
+languageCode: en-us
+title: Chirag Personal Blog
+theme: PaperMod
+
+# Enable emoji support
+enableEmoji: true
+
+# Enable Git info for last modified dates
+enableGitInfo: true
+
+# Pagination
+paginate: 10
+
+# Build configuration
+build:
+    writeStats: true
+
+# Minification
+minify:
+    disableXML: true
+    minifyOutput: true
+
+# Output formats
+outputs:
+    home:
+        - HTML
+        - RSS
+        - JSON
+
+# Menu configuration
+menu:
+    main:
+        - identifier: posts
+          name: Posts
+          url: /posts/
+          weight: 10
+        - identifier: tags
+          name: Tags
+          url: /tags/
+          weight: 20
+        - identifier: search
+          name: Search
+          url: /search/
+          weight: 30
+
+# PaperMod theme parameters
+params:
+    env: production
+    title: Chirag Personal Blog
+    description: "Personal blog covering tech, finance, and productivity"
+    author: Chirag Singhal
+
+    # Date format
+    DateFormat: "January 2, 2006"
+
+    # Show reading time
+    ShowReadingTime: true
+    ShowShareButtons: true
+    ShowPostNavLinks: true
+    ShowBreadCrumbs: true
+    ShowCodeCopyButtons: true
+    ShowWordCount: true
+    ShowRssButtonInSectionTermList: true
+    UseHugoToc: true
+    disableSpecial1stPost: false
+    disableScrollToTop: false
+    comments: false
+    hidemeta: false
+    hideSummary: false
+    showtoc: true
+    tocopen: false
+
+    # Social icons
+    socialIcons:
+        - name: github
+          url: "https://github.com/chirag127"
+        - name: twitter
+          url: "https://twitter.com/chirag127"
+        - name: linkedin
+          url: "https://linkedin.com/in/chirag127"
+
+    # Home page configuration
+    homeInfoParams:
+        Title: "Welcome to Chirag's Personal Blog 👋"
+        Content: >
+            Sharing insights on technology, personal finance, productivity, and software development.
+
+
+            Writing about AI tools, Indian financial products, and career growth for young professionals.
+
+    # Search configuration
+    fuseOpts:
+        isCaseSensitive: false
+        shouldSort: true
+        location: 0
+        distance: 1000
+        threshold: 0.4
+        minMatchCharLength: 0
+        keys: ["title", "permalink", "summary", "content"]
+
+# Markup configuration
+markup:
+    goldmark:
+        renderer:
+            unsafe: true
+    highlight:
+        noClasses: false
+        style: monokai
+        lineNos: true
+        lineNumbersInTable: true
