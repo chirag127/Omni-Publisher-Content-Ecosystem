@@ -98,10 +98,10 @@ security:
     enableInlineShortcodes: false # Prevent arbitrary code execution
     exec:
         allow:
-            - "^git$"
-            - "^go$"
-            - "^npx$"
-            - "^postcss$"
+            - "^git(.exe)?$"
+            - "^go(.exe)?$"
+            - "^npx(.exe)?$"
+            - "^postcss(.exe)?$"
         osEnv:
             - "^HUGO_"
             - "^CI"

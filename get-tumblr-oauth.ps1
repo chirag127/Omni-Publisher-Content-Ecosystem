@@ -1,5 +1,5 @@
 # Tumblr OAuth 1.0a - Complete PowerShell Implementation
-# This script completes the full 3-step OAuth flow with error logging
+# This script completes the full 3-step OAuth flow with robust response handling
 
 param([string]$Key, [string]$Secret)
 
@@ -62,17 +62,16 @@ $p1.oauth_signature = Get-Signature "POST" $url1 $p1 $Secret
 $auth1 = "OAuth " + (($p1.Keys | Sort-Object | ForEach-Object { "$(UrlEncode $_)=`"$(UrlEncode $p1[$_])`"" }) -join ", ")
 
 try {
-    try {
-        $r1 = Invoke-WebRequest -Uri $url1 -Method POST -Headers @{Authorization=$auth1} -UseBasicParsing
-    } catch {
-        $stream = $_.Exception.Response.GetResponseStream()
-        $reader = New-Object System.IO.StreamReader($stream)
-        $body = $reader.ReadToEnd()
-        throw "Request failed: $($_.Exception.Message) - Body: $body"
+    $r1 = Invoke-WebRequest -Uri $url1 -Method POST -Headers @{Authorization=$auth1} -UseBasicParsing
+
+    # Handle content if it's a byte array
+    $content1 = $r1.Content
+    if ($content1 -is [byte[]]) {
+        $content1 = [System.Text.Encoding]::UTF8.GetString($content1)
     }
 
     $d1 = @{}
-    foreach ($pair in ($r1.Content -split '&')) {
+    foreach ($pair in ($content1 -split '&')) {
         if ($pair -match '^([^=]+)=(.*)$') {
             $d1[$matches[1]] = [System.Web.HttpUtility]::UrlDecode($matches[2])
         }
@@ -82,7 +81,7 @@ try {
     $reqSec = $d1.oauth_token_secret
 
     if (-not $reqTok) {
-        Write-Host "Response Content: $($r1.Content)" -ForegroundColor Red
+        Write-Host "Raw Response: $content1" -ForegroundColor Red
         throw "No request token received"
     }
 
@@ -95,25 +94,6 @@ try {
     Write-Host "Opening: $authUrl`n" -ForegroundColor Cyan
     Start-Process $authUrl
     Start-Sleep -Seconds 2
-
-    Write-Host "Paste the callback URL after authorizing:" -ForegroundColor White
-    Write-Host "(Page will show error - just copy the URL from address bar)`n" -ForegroundColor Gray
-
-    $cbUrl = Read-Host "Callback URL"
-
-    if ($cbUrl -notmatch 'oauth_verifier=([^&]+)') { throw "No verifier found" }
-    $ver = $matches[1]
-
-    Write-Host "`n[OK] Verifier extracted`n" -ForegroundColor Green
-
-    # Step 3
-    Write-Host "[3/3] Getting access token...`n" -ForegroundColor Yellow
-
-    $url2 = "https://www.tumblr.com/oauth/access_token"
-    $p2 = @{
-        oauth_consumer_key = $Key
-        oauth_nonce = [Guid]::NewGuid().ToString("N")
-        oauth_signature_method = "HMAC-SHA1"
         oauth_timestamp = [string]([int][double]::Parse((Get-Date -UFormat %s)))
         oauth_token = $reqTok
         oauth_verifier = $ver
@@ -125,8 +105,14 @@ try {
 
     $r2 = Invoke-WebRequest -Uri $url2 -Method POST -Headers @{Authorization=$auth2} -UseBasicParsing
 
+    # Handle content if it's a byte array
+    $content2 = $r2.Content
+    if ($content2 -is [byte[]]) {
+        $content2 = [System.Text.Encoding]::UTF8.GetString($content2)
+    }
+
     $d2 = @{}
-    foreach ($pair in ($r2.Content -split '&')) {
+    foreach ($pair in ($content2 -split '&')) {
         if ($pair -match '^([^=]+)=(.*)$') {
             $d2[$matches[1]] = [System.Web.HttpUtility]::UrlDecode($matches[2])
         }
