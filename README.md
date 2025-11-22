@@ -1,29 +1,3 @@
-<div align="center">
-
-# 🚀 Omni-Publisher Content Ecosystem
-
-### _Write Once, Publish Everywhere_
-
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Node.js Version](https://img.shields.io/badge/node-22%2B-brightgreen)](https://nodejs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
-
----
-
-## 📖 Table of Contents
-
--   [About](#-about)
--   [Key Features](#-key-features)
--   [Platform Support](#-supported-platforms)
--   [Quick Start](#-quick-start)
--   [Prerequisites](#prerequisites)
--   [Installation](#installation)
--   [Configuration](#-configuration)
--   [Comprehensive API Keys & Tokens Guide](#-comprehensive-api-keys--tokens-guide)
--   [Usage](#-usage)
--   [Project Structure](#-project-structure)
--   [GitHub Actions Workflows](#-github-actions-workflows)
--   [Troubleshooting](#-troubleshooting)
 -   [Roadmap](#-roadmap)
 -   [FAQ](#-faq)
 -   [Contributing](#-contributing)
@@ -1172,26 +1146,6 @@ Open an issue with:
 ---
 
 ## 💬 Support
-
-Need help? Here are your options:
-
--   📖 **Documentation:** You're reading it! Check the sections above
--   💬 **Discussions:** [GitHub Discussions](https://github.com/chirag127/omni-publisher9/discussions)
--   🐛 **Bug Reports:** [GitHub Issues](https://github.com/chirag127/omni-publisher9/issues)
--   📧 **Email:** [your-email@example.com](mailto:your-email@example.com)
--   🐦 **Twitter:** [@yourhandle](https://twitter.com/yourhandle)
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-**TL;DR:** You can use, modify, and distribute this software freely, even for commercial purposes. Just include the original license.
-
----
-
-## 🙏 Credits & Acknowledgments
 
 -   Dev.to, Hashnode, Medium, WordPress, Blogger, Tumblr, Wix, Telegraph, Mastodon, Notion, Strapi, LinkedIn, Reddit, Discord, Showwcase
 
