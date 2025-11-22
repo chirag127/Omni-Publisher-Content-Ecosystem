@@ -40,7 +40,6 @@ export class DevToAdapter implements Adapter {
                             description: post.description,
                             cover_image: post.coverImage,
                             canonical_url: post.publishedUrl,
-                            canonical_url: post.publishedUrl,
                         },
                     },
                     {

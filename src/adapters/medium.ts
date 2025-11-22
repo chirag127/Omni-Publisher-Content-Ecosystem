@@ -25,6 +25,7 @@ export class MediumAdapter implements Adapter {
                     content: post.content,
                     tags: post.tags,
                     publishStatus: "public",
+                    canonicalUrl: post.publishedUrl,
                 },
                 {
                     headers: {
