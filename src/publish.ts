@@ -40,6 +40,9 @@ import { LiveJournalAdapter } from "./adapters/livejournal.js";
 import { VKAdapter } from "./adapters/vk.js";
 import { WeiboAdapter } from "./adapters/weibo.js";
 import { PixnetAdapter } from "./adapters/pixnet.js";
+import { PlurkAdapter } from "./adapters/plurk.js";
+import { GitLabAdapter } from "./adapters/gitlab.js";
+import { BitbucketAdapter } from "./adapters/bitbucket.js";
 
 import { BlueskyAdapter } from "./adapters/bluesky.js";
 import { FacebookAdapter } from "./adapters/facebook.js";
@@ -69,6 +72,9 @@ const ADAPTERS: Adapter[] = [
     new VKAdapter(),
     new WeiboAdapter(),
     new PixnetAdapter(),
+    new PlurkAdapter(),
+    new GitLabAdapter(),
+    new BitbucketAdapter(),
     // Social Media Link Sharing Adapters
     new TelegramAdapter(),
     new BlueskyAdapter(),
