@@ -2,6 +2,13 @@
 name: Publish Content
 
 on:
+    push:
+        branches: [main]
+        paths:
+            - "content/posts/**/*.md"
+            - "src/publish.ts"
+            - "src/adapters/**"
+            - ".github/workflows/publish-sync.yml"
     schedule:
         - cron: "0 */6 * * *" # Run every 6 hours
     workflow_dispatch:
