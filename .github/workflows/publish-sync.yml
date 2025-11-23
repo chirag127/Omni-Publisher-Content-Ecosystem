@@ -13,6 +13,9 @@ on:
         - cron: "0 */6 * * *" # Run every 6 hours
     workflow_dispatch:
 
+permissions:
+    contents: write
+
 jobs:
     publish:
         runs-on: ubuntu-latest
@@ -121,3 +124,4 @@ jobs:
               with:
                   commit_message: "chore: update publish state [skip ci]"
                   file_pattern: .postmap.json
+                  skip_dirty_check: true
