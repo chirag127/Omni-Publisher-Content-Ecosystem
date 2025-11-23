@@ -124,4 +124,3 @@ jobs:
               with:
                   commit_message: "chore: update publish state [skip ci]"
                   file_pattern: .postmap.json
-                  skip_dirty_check: true
