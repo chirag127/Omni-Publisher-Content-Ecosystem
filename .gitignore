@@ -200,3 +200,4 @@ public/
 resources/
 .hugo_build.lock
 .vercel
+lint_report_final_v2.txt

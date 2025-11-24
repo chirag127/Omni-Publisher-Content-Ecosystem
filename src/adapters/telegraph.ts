@@ -28,7 +28,7 @@ export class TelegraphAdapter implements Adapter {
 
       // Retry logic for ECONNRESET
       let retries = 3;
-      let response;
+      let response: any;
       while (retries > 0) {
         try {
           response = await axios.post("https://api.telegra.ph/createPage", {
